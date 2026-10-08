@@ -1,0 +1,29 @@
+---
+- name: Ensure /var/www/html exists
+  file:
+    path: /var/www/html
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0755"
+
+- name: Deploy default site configuration
+  template:
+    src: default_site.conf.j2
+    dest: /etc/nginx/sites-available/default
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload nginx
+
+- name: Enable site via symlink
+  file:
+    src: /etc/nginx/sites-available/default
+    dest: /etc/nginx/sites-enabled/default
+    state: link
+  notify: Reload nginx
+
+- name: Validate NGINX configuration before applying
+  command: nginx -t
+  changed_when: false
+  notify: Reload nginx

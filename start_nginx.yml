@@ -1,7 +1,0 @@
----
-- name: Start NGINX
-  hosts: all
-
-  tasks:
-    - name: systemctl start nginx
-      raw: sudo systemctl start nginx

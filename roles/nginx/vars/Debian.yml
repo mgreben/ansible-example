@@ -1,0 +1,5 @@
+---
+# Специфичные для Debian/Ubuntu пакеты
+nginx_os_packages:
+  - nginx
+  - nginx-common

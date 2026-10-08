@@ -1,0 +1,27 @@
+---
+- name: Gather OS facts for variable resolution
+  ansible.builtin.setup:
+    filter: ansible_facts['os_family']
+  when: ansible_facts['os_family'] is not defined
+
+- name: Load OS-specific variables
+  ansible.builtin.import_tasks: load_vars.yml
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install NGINX
+  apt:
+    name: "{{ nginx_packages + nginx_os_packages | default([]) }}"
+    state: present
+
+- name: Configure NGINX
+  ansible.builtin.import_tasks: configure.yml
+
+- name: Ensure NGINX is running and enabled
+  service:
+    name: nginx
+    state: "{{ nginx_service_state }}"
+    enabled: "{{ nginx_service_enabled }}"
