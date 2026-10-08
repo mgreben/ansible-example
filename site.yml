@@ -1,0 +1,8 @@
+---
+- name: Common site playbook
+  hosts: all
+  become: true
+
+  roles:
+    - htop
+    - nginx
